@@ -13,7 +13,7 @@ SECRET_KEY = "django-insecure-g-g1x^ic(v9m+y*tf@^j$3eu!^@l=bz(tll0&4q$7j=e9@zciq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 AUTH_USER_MODEL = "users.CustomUser"
 
 
@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    'drf_yasg',
     "tuition",
     "api",
     "users",
