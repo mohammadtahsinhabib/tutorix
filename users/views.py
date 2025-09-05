@@ -1,19 +1,26 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions, generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.viewsets import ModelViewSet
 from .models import *
 from .serializers import *
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(ModelViewSet):
+    http_method_names = ["get","patch","delete","post"]
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
-class TutorViewSet(viewsets.ModelViewSet):
+class TutorViewSet(ModelViewSet):
+    http_method_names = ["get","patch","delete","post"]
     queryset = Tutor.objects.all()
     serializer_class = TutorSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
-class StudentViewSet(viewsets.ModelViewSet):
+class StudentViewSet(ModelViewSet):
+    http_method_names = ["get","patch","delete","post"]
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]

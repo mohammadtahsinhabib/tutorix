@@ -27,8 +27,6 @@ class UserCreateSerializer(BaseUserCreateSerializer):
 
 
 class TutorSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-
     class Meta:
         model = Tutor
         fields = [
@@ -40,11 +38,14 @@ class TutorSerializer(serializers.ModelSerializer):
             "hourly_rate",
             "subjects",
         ]
+    
+    user = UserSerializer(read_only=True)
+
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-
     class Meta:
         model = Student
         fields = ["id", "user", "institution", "class_level"]
+
+    user = UserSerializer(read_only=True)
