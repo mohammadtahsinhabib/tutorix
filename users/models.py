@@ -40,7 +40,7 @@ class Student(models.Model):
         related_name="student",
     )
 
-    institution = models.CharField(max_length=500, blank=True)
+    institution = models.CharField(max_length=250, blank=True)
     class_level = models.CharField(max_length=100, blank=True)
 
     def __str__(self):

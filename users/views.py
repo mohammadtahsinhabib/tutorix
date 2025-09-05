@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions, generics
-from .models import CustomUser, Tutor, Student
+from .models import *
 from .serializers import *
 
 

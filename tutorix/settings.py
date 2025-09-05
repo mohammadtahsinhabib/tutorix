@@ -1,3 +1,6 @@
+import cloudinary
+from decouple import config
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,6 +30,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "djoser",
     "drf_yasg",
     "tuition",
     "api",
@@ -120,3 +124,72 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+
+DJOSER = {
+    # "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
+    # "ACTIVATION_URL": "activate/{uid}/{token}",
+    # "SEND_ACTIVATION_EMAIL": True,
+    "SERIALIZERS": {
+        "user_create": "users.serializers.UserCreateSerializer",
+        "current_user": "users.serializers.UserSerializer",
+    },
+}
+
+REST_FRAMEWORK = {
+    "COERCE_DECIMAL_TO_STRING": False,
+    # "DEFAULT_AUTHENTICATION_CLASSES": (
+    #     "rest_framework_simplejwt.authentication.JWTAuthentication",
+    # ),
+    #     'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    # ),
+}
+
+
+# SIMPLE_JWT = {
+#     "AUTH_HEADER_TYPES": ("JWT",),
+#     "ACCESS_TOKEN_LIFETIME": timedelta(days=120),
+#     "REFRESH_TOKEN_LIFETIME": timedelta(days=360),
+# }
+
+
+# MEDIA_URL = "/media/"
+# MEDIA_ROOT = BASE_DIR / "media"
+
+# SWAGGER_SETTINGS = {
+#     "SECURITY_DEFINITIONS": {
+#         "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
+#     }
+# }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": config("dbname"),
+#         "USER": config("user"),
+#         "PASSWORD": config("password"),
+#         "HOST": config("host"),
+#         "PORT": config("port"),
+#     }
+# }
+
+# cloudinary.config(
+#     cloud_name="dsyexjkec",
+#     api_key="147143614165615",
+#     api_secret="cIllZbbIwc9ulMZBaigTB78gqTE",
+#     secure=True,
+# )
+
+# DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+# STATIC_ROOT = BASE_DIR / "staticfiles"
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_HOST = config("EMAIL_HOST")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
+EMAIL_PORT = config("EMAIL_PORT")
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")

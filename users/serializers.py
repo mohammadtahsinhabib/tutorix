@@ -1,15 +1,18 @@
 from .models import *
 from rest_framework import serializers
-from djoser.serializers import UserCreateSerializer
+from djoser.serializers import (
+    UserCreateSerializer as BaseUserCreateSerializer,
+    UserSerializer as BaseUserSerializer)
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
+class UserSerializer(BaseUserSerializer):
+    class Meta(BaseUserSerializer.Meta):
+        ref_name = "CustomUser"
         model = CustomUser
         fields = ["id", "email", "first_name", "last_name", "is_tutor", "is_student"]
 
 
-class CustomUserCreateSerializer(UserCreateSerializer):
+class UserCreateSerializer(BaseUserCreateSerializer):
     class Meta:
         model = CustomUser
         fields = ("id", "email", "password", "is_tutor", "is_student")
@@ -18,7 +21,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         user = super().create(validated_data)
         if user.is_tutor:
             Tutor.objects.create(user=user)
-        if user.is_student:
+        elif user.is_student:
             Student.objects.create(user=user)
         return user
 
