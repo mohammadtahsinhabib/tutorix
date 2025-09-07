@@ -8,3 +8,5 @@ class TuitionSerializer(serializers.ModelSerializer):
         fields = "__all__"
     
     tutor = UserSerializer(read_only = True)
+
+    
