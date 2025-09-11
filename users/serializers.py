@@ -2,7 +2,8 @@ from .models import *
 from rest_framework import serializers
 from djoser.serializers import (
     UserCreateSerializer as BaseUserCreateSerializer,
-    UserSerializer as BaseUserSerializer)
+    UserSerializer as BaseUserSerializer,
+)
 
 
 class UserSerializer(BaseUserSerializer):
@@ -38,9 +39,8 @@ class TutorSerializer(serializers.ModelSerializer):
             "hourly_rate",
             "subjects",
         ]
-    
-    user = UserSerializer(read_only=True)
 
+    user = UserSerializer(read_only=True)
 
 
 class StudentSerializer(serializers.ModelSerializer):

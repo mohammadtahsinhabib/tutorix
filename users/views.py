@@ -1,26 +1,123 @@
-from django.shortcuts import render
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import status
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-from .models import *
-from .serializers import *
+from tuition.models import Application, Tuition
+from users.models import Student, Tutor, CustomUser
+from users.serializers import UserSerializer, StudentSerializer, TutorSerializer
+from tuition.serializers import ApplicationSerializer, TuitionSerializer
 
 
 class UserViewSet(ModelViewSet):
-    http_method_names = ["get","patch","delete","post"]
+    http_method_names = ["get", "patch", "delete", "post"]
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class TutorViewSet(ModelViewSet):
-    http_method_names = ["get","patch","delete","post"]
+    http_method_names = ["get", "patch", "delete"]
     queryset = Tutor.objects.all()
     serializer_class = TutorSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    @action(
+        detail=False,
+        methods=["get", "put"],
+        url_path="profile",
+        permission_classes=[IsAuthenticated],
+    )
+    def profile(self, request):
+
+        if not request.user.is_tutor:
+            raise PermissionDenied("Only tutor can access this endpoint")
+
+        if request.method == "GET":
+            return Response(TutorSerializer(request.user).data)
+        elif request.method == "PUT":
+            serializer = TutorSerializer(request.user, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="my-tuitions",
+        permission_classes=[IsAuthenticated],
+    )
+    def my_tuitions(self, request):
+        if not request.user.is_tutor:
+            raise PermissionDenied("Only tutor can access this endpoint")
+
+        tuitions = Tuition.objects.filter(tutor=request.user)
+        return Response(TuitionSerializer(tuitions, many=True).data)
+
+    @action(detail=True, methods=["get"], permission_classes=[IsAuthenticated])
+    def applicants(self, request, pk=None):
+        tuition = self.get_object()
+
+        if not request.user.is_student:
+            raise PermissionDenied("Only student can access this endpoint")
+
+        if request.user != tuition.tutor:
+            raise PermissionDenied("Permission Denied")
+
+        applications = Application.objects.filter(tuition=tuition)
+        serializer = ApplicationSerializer(applications, many=True)
+        return Response(serializer.data)
+
 
 class StudentViewSet(ModelViewSet):
-    http_method_names = ["get","patch","delete","post"]
+    http_method_names = ["get", "patch", "delete"]
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    @action(
+        detail=False,
+        methods=["get", "put"],
+        url_path="profile",
+        permission_classes=[IsAuthenticated],
+    )
+    def profile(self, request):
+
+        if not request.user.is_student:
+            raise PermissionDenied("Only student can access this endpoint")
+
+        if request.method == "GET":
+            return Response(StudentSerializer(request.user).data)
+
+        elif request.method == "PUT":
+            serializer = StudentSerializer(
+                request.user, data=request.data, partial=True
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="applied-tuitions",
+        permission_classes=[IsAuthenticated],
+    )
+    def applied_tuitions(self, request):
+
+        if not request.user.is_student:
+            raise PermissionDenied("Only student can access this endpoint")
+
+        applications = Application.objects.filter(user=request.user)
+        return Response(ApplicationSerializer(applications, many=True).data)
+
+    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
+    def accepted_tuitions(self, request):
+
+        if not request.user.is_student:
+            raise PermissionDenied("Only students can view")
+
+        applications = Application.objects.filter(user=request.user, is_selected=True)
+        serializer = ApplicationSerializer(applications, many=True)
+        return Response(serializer.data)
