@@ -3,23 +3,20 @@ from tuition.models import Tuition
 from rest_framework import serializers
 
 
-# class TopicSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Topic
-#         fields = ["id", "title", "description"]
-
-
 class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
         # fields = ["id", "title", "description", "created_at"]
         fields = "__all__"
-        read_only_fields = ['tutor']
+        read_only_fields = ["tutor"]
 
 
 class ProgressSerializer(serializers.ModelSerializer):
     # completed_topics = TopicSerializer(many=True, read_only=True)
     assignments_completed = AssignmentSerializer(many=True, read_only=True)
+    assignments_given = serializers.SerializerMethodField(
+        method_name="get_assignments_given"
+    )
 
     class Meta:
         model = Progress
@@ -27,9 +24,14 @@ class ProgressSerializer(serializers.ModelSerializer):
             "id",
             "student",
             "tuition",
-            "completed_topics",
+            "assignments_given",
             "assignments_completed",
         ]
+
+    def get_assignments_given(self, obj):
+        return AssignmentSerializer(
+            obj.tuition.assignments.filter(student=obj.student), many=True
+        ).data
 
 
 class TuitionProgressSerializer(serializers.ModelSerializer):

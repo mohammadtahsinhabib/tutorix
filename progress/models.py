@@ -3,16 +3,6 @@ from tuition.models import Tuition
 from django.conf import settings
 from users.models import Student
 
-# class Topic(models.Model):
-#     tuition = models.ForeignKey(
-#         Tuition, on_delete=models.CASCADE, related_name="topics"
-#     )
-#     title = models.CharField(max_length=255)
-#     description = models.TextField(blank=True)
-
-#     def __str__(self):
-#         return self.title
-
 
 class Assignment(models.Model):
     tuition = models.ForeignKey(
@@ -36,3 +26,6 @@ class Progress(models.Model):
     )
     # completed_topic = models.ManyToManyField(Topic, blank=True)
     assignments_completed = models.ManyToManyField(Assignment, blank=True)
+
+    class Meta:
+        unique_together = ("student", "tuition")

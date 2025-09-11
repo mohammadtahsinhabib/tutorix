@@ -3,7 +3,7 @@ from tuition.views import *
 from users.views import UserViewSet, TutorViewSet, StudentViewSet
 from rest_framework_nested import routers
 from tuition.views import TuitionViewSet
-from progress.views import ProgressViewSet,AssignmentViewSet
+from progress.views import ProgressViewSet, AssignmentViewSet
 
 router = routers.DefaultRouter()
 router.register("users", UserViewSet, basename="users")
@@ -14,7 +14,7 @@ router.register("tuitions", TuitionViewSet, basename="tuitions")
 
 tuition_router = routers.NestedDefaultRouter(router, "tuitions", lookup="tuition")
 tuition_router.register("progress", ProgressViewSet, basename="tuition-progress")
-tuition_router.register("assignments", AssignmentViewSet , basename="tuition-status")
+tuition_router.register("assignments", AssignmentViewSet, basename="tuition-status")
 
 # student_router = routers.NestedDefaultRouter(router, "students", lookup="student-progress")
 # student_router.register("progress", ProgressViewSet , basename="student-progress")
