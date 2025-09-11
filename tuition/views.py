@@ -7,7 +7,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import status
 from tuition.serializers import *
-from .models import Tuition, Application
+from tuition.models import Tuition
+from applications.models import Application
+
 from django_filters.rest_framework import DjangoFilterBackend
 
 

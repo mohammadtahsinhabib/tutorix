@@ -4,10 +4,12 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-from tuition.models import Application, Tuition
+from tuition.models import Tuition
+from applications.models import Application
 from users.models import Student, Tutor, CustomUser
 from users.serializers import UserSerializer, StudentSerializer, TutorSerializer
-from tuition.serializers import ApplicationSerializer, TuitionSerializer
+from tuition.serializers import TuitionSerializer
+from applications.serializers import ApplicationSerializer
 
 
 class UserViewSet(ModelViewSet):
