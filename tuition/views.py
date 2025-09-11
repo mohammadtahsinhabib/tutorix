@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,7 +8,8 @@ from rest_framework import status
 from tuition.serializers import *
 from tuition.models import Tuition
 from applications.models import Application
-
+from progress.models import Assignment
+from progress.serializers import AssignmentSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
 
@@ -131,41 +131,14 @@ class TuitionViewSet(ModelViewSet):
             serializer.save(user=self.request.user, tuition=tuition)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(detail=True, methods=["post"], url_path="status")
-    def mark_topic_completed(self, request, pk=None):
-        tuition = self.get_object()
-        topic_id = request.data.get("topic_id")
-
-        if not request.user.tutor:
-            raise PermissionDenied("Only tutor can access this endpoint")
-
-        if request.user != tuition.tutor:
-            raise PermissionDenied(
-                "Only the tutor who created the topic can mark it as complete"
-            )
-
-        progress, _ = Progress.objects.get_or_create(
-            student=request.user, tuition=tuition
-        )
-        topic = Topic.objects.get(id=topic_id, tuition=tuition)
-        progress.completed_topics.add(topic)
-        progress.save()
-        serializer = ProgressSerializer(progress)
-        return Response(serializer.data)
-
-    @action(detail=True, methods=["post"], url_path="assignment")
     def add_assignment(self, request, pk=None):
         tuition = self.get_object()
-        if tuition.tutor != request.user:
-            return Response(
-                {"error": "Only tutor can add assignments"},
-                status=status.HTTP_403_FORBIDDEN,
-            )
+        student_id = request.data.get("student_id")
 
-        title = request.data.get("title")
-        description = request.data.get("description", "")
         assignment = Assignment.objects.create(
-            tuition=tuition, title=title, description=description
+            tuition=tuition,
+            student_id=student_id,
+            title=request.data["title"],
+            description=request.data.get("description", ""),
         )
-        serializer = AssignmentSerializer(assignment)
-        return Response(serializer.data)
+        return Response(AssignmentSerializer(assignment).data)

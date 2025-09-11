@@ -1,22 +1,24 @@
-from progress.models import Topic, Assignment, Progress
+from progress.models import Assignment, Progress
 from tuition.models import Tuition
 from rest_framework import serializers
 
 
-class TopicSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Topic
-        fields = ["id", "title", "description"]
+# class TopicSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Topic
+#         fields = ["id", "title", "description"]
 
 
 class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
-        fields = ["id", "title", "description", "created_at"]
+        # fields = ["id", "title", "description", "created_at"]
+        fields = "__all__"
+        read_only_fields = ['tutor']
 
 
 class ProgressSerializer(serializers.ModelSerializer):
-    completed_topics = TopicSerializer(many=True, read_only=True)
+    # completed_topics = TopicSerializer(many=True, read_only=True)
     assignments_completed = AssignmentSerializer(many=True, read_only=True)
 
     class Meta:
@@ -31,7 +33,7 @@ class ProgressSerializer(serializers.ModelSerializer):
 
 
 class TuitionProgressSerializer(serializers.ModelSerializer):
-    topics = TopicSerializer(many=True, read_only=True)
+    # topics = TopicSerializer(many=True, read_only=True)
     assignments = AssignmentSerializer(many=True, read_only=True)
     selected_student_id = serializers.IntegerField(
         source="selected_student.id", read_only=True

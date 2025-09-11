@@ -5,11 +5,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from tuition.models import Tuition
+from progress.models import Progress
 from applications.models import Application
 from users.models import Student, Tutor, CustomUser
 from users.serializers import UserSerializer, StudentSerializer, TutorSerializer
 from tuition.serializers import TuitionSerializer
 from applications.serializers import ApplicationSerializer
+from progress.serializers import ProgressSerializer
 
 
 class UserViewSet(ModelViewSet):
@@ -69,6 +71,15 @@ class TutorViewSet(ModelViewSet):
 
         applications = Application.objects.filter(tuition=tuition)
         serializer = ApplicationSerializer(applications, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["get"], url_path="students-progress")
+    def students_progress(self, request, pk=None):
+        tutor = self.get_object()
+        tutor_user = tutor.user
+        tuitions = Tuition.objects.filter(tutor=tutor_user)
+        progress = Progress.objects.filter(tuition__in=tuitions)
+        serializer = ProgressSerializer(progress, many=True)
         return Response(serializer.data)
 
 
