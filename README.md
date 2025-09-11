@@ -115,9 +115,9 @@ The application is deployed on a secure hosting platform with the following comp
 
 - **Frontend:** Hosted on [Platform Name]
 - **Backend:** API deployed on [Vercel]
-- **Database:** MongoDB hosted on [SuperBase]
+- **Database:** MongoDB hosted on [SupaBase]
 
-Live Demo: [Insert Live URL Here]
+Live Demo: [https://tutorix-blond.vercel.app/]
 
 ## 📁 Project Structure
 
@@ -141,7 +141,7 @@ tuition-media-platform/
 
 ## 🔧 API Documentation
 
-The API endpoints are documented using Swagger. Access the full API documentation at [API Documentation Link] after running the development server.
+The API endpoints are documented using Swagger. Access the full API documentation at [https://tutorix-blond.vercel.app/docs/] after running the development server.
 
 ## 👥 User Roles
 
@@ -172,7 +172,7 @@ This project is licensed under the GPL License - see the [LICENSE.md](LICENSE.md
 
 ## 📞 Support
 
-For support, email support@tuitionmedia.com or join our Slack channel.
+For support, email support@tutorix.org or join our Slack channel.
 
 ## 🎯 Future Enhancements
 
