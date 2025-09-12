@@ -1,4 +1,4 @@
-from rest_framework import status
+
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -129,7 +129,7 @@ class StudentViewSet(ModelViewSet):
         applications = Application.objects.filter(user=request.user)
         return Response(ApplicationSerializer(applications, many=True).data)
 
-    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=["get"],url_path='accepted-tuitions',permission_classes=[IsAuthenticated])
     def accepted_tuitions(self, request):
 
         if not request.user.is_student:

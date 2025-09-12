@@ -1,3 +1,6 @@
+from reviews.views import perform_review
+from reviews.serializers import ReviewSerializers
+from reviews.models import Review
 from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
@@ -112,24 +115,11 @@ class TuitionViewSet(ModelViewSet):
     @action(detail=True, methods=["post", "get"], permission_classes=[IsAuthenticated])
     def reviews(self, request, pk=None):
         tuition = self.get_object()
+        review,status_code = perform_review(request,tuition)
+        if status_code==status.HTTP_201_CREATED:
+            return Response(review)
+        return Response({"Something went Wrong"})
 
-        if request.method == "GET":
-            reviews = Review.objects.filter(tuition=tuition)
-            return Response(ReviewSerializer(reviews, many=True).data)
-
-        if request.method == "POST":
-            if not self.request.user.is_student:
-                raise PermissionDenied("Only students can leave reviews.")
-
-            if not Application.objects.filter(
-                tuition=tuition, user=request.user, is_selected=True
-            ).exists():
-                raise PermissionDenied("This tutor doesnt tutioned you")
-
-            serializer = ReviewSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save(user=self.request.user, tuition=tuition)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def add_assignment(self, request, pk=None):
         tuition = self.get_object()
