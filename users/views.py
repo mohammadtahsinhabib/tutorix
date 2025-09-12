@@ -38,10 +38,11 @@ class TutorViewSet(ModelViewSet):
         if not request.user.is_tutor:
             raise PermissionDenied("Only tutor can access this endpoint")
 
+        tutor = Tutor.objects.get(user=request.user)
         if request.method == "GET":
-            return Response(TutorSerializer(request.user).data)
+            return Response(TutorSerializer(tutor).data)
         elif request.method == "PUT":
-            serializer = TutorSerializer(request.user, data=request.data, partial=True)
+            serializer = TutorSerializer(tutor, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
@@ -100,12 +101,15 @@ class StudentViewSet(ModelViewSet):
         if not request.user.is_student:
             raise PermissionDenied("Only student can access this endpoint")
 
+        
+        student = Student.objects.get(user=request.user)
+        
         if request.method == "GET":
-            return Response(StudentSerializer(request.user).data)
+            return Response(StudentSerializer(student).data)
 
         elif request.method == "PUT":
             serializer = StudentSerializer(
-                request.user, data=request.data, partial=True
+                student, data=request.data, partial=True
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
