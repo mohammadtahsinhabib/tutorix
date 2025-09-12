@@ -60,19 +60,20 @@ class TutorViewSet(ModelViewSet):
         tuitions = Tuition.objects.filter(tutor=request.user)
         return Response(TuitionSerializer(tuitions, many=True).data)
 
-    @action(detail=True, methods=["get"], permission_classes=[IsAuthenticated])
-    def applicants(self, request, pk=None):
-        tuition = self.get_object()
+    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
+    def applicants(self, request):
+        if not request.user.is_tutor:
+            raise PermissionDenied("Only tutor can access this endpoint")
+        
+        applicants = Application.objects.filter(tuition__tutor = request.user)
 
-        if not request.user.is_student:
-            raise PermissionDenied("Only student can access this endpoint")
+        tuition_id = request.query_params.get("tuition_id")
+        if tuition_id:
+            applicants = applicants.filter(tuition_id=tuition_id)
 
-        if request.user != tuition.tutor:
-            raise PermissionDenied("Permission Denied")
-
-        applications = Application.objects.filter(tuition=tuition)
-        serializer = ApplicationSerializer(applications, many=True)
+        serializer = ApplicationSerializer(applicants, many=True)
         return Response(serializer.data)
+    
 
     @action(detail=True, methods=["get"], url_path="students-progress")
     def students_progress(self, request, pk=None):

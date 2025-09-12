@@ -70,20 +70,6 @@ class TuitionViewSet(ModelViewSet):
             {"detail": "Applied successfully"}, status=status.HTTP_201_CREATED
         )
 
-    @action(detail=True, methods=["get"], permission_classes=[IsAuthenticated])
-    def applicants(self, request, pk=None):
-        tuition = self.get_object()
-
-        if not request.user.is_student:
-            raise PermissionDenied("Only student can access this endpoint")
-
-        if request.user != tuition.tutor:
-            raise PermissionDenied("Permission Denied")
-
-        applications = Application.objects.filter(tuition=tuition)
-        serializer = ApplicationSerializer(applications, many=True)
-        return Response(serializer.data)
-
     @action(
         detail=True,
         methods=["post"],
