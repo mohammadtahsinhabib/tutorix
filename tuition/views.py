@@ -1,6 +1,4 @@
-from reviews.views import perform_review
-from reviews.serializers import ReviewSerializers
-from reviews.models import Review
+from applications.serializers import ApplicationSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
@@ -8,12 +6,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import status
-from tuition.serializers import *
+from tuition.serializers import TuitionSerializer
 from tuition.models import Tuition
 from applications.models import Application
 from progress.models import Assignment
 from progress.serializers import AssignmentSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from reviews.serializers import ReviewSerializer
 
 
 class TuitionViewSet(ModelViewSet):
@@ -91,10 +90,10 @@ class TuitionViewSet(ModelViewSet):
         permission_classes=[IsAuthenticated],
         url_path="select/(?P<applicant_id>[^/.]+)",
     )
-    def select(self, request):
+    def select(self, request,pk=None,applicant_id=None):
         tuition = self.get_object()
 
-        if not request.user.tutor:
+        if not request.user.is_tutor:
             raise PermissionDenied("Only tutor can access this endpoint")
 
         if request.user != tuition.tutor:
@@ -111,16 +110,7 @@ class TuitionViewSet(ModelViewSet):
         return Response(
             {"error": "Applicant not found"}, status=status.HTTP_404_NOT_FOUND
         )
-
-    @action(detail=True, methods=["post", "get"], permission_classes=[IsAuthenticated])
-    def reviews(self, request, pk=None):
-        tuition = self.get_object()
-        review,status_code = perform_review(request,tuition)
-        if status_code==status.HTTP_201_CREATED:
-            return Response(review)
-        return Response({"Something went Wrong"})
-
-
+    
     def add_assignment(self, request, pk=None):
         tuition = self.get_object()
         student_id = request.data.get("student_id")
