@@ -3,6 +3,7 @@ from applications.models import Application
 from users.serializers import UserSerializer
 from tuition.serializers import TuitionSerializer
 
+
 class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application

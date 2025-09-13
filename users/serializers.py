@@ -42,6 +42,7 @@ class TutorSerializer(serializers.ModelSerializer):
 
     user = UserSerializer(read_only=True)
 
+
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student

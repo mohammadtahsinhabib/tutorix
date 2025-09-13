@@ -13,12 +13,11 @@ class AssignmentViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=["post"], url_path="mark-completed")
-    def mark_completed(self, request,pk=None, tuition_pk=None):
+    def mark_completed(self, request, pk=None, tuition_pk=None):
         assignment = self.get_object()
 
         if assignment.tuition.tutor != request.user:
             PermissionDenied("You dont create it")
-
 
         assignment.is_completed = True
         assignment.save()

@@ -13,6 +13,7 @@ from applications.models import Application
 from applications.serializers import ApplicationSerializer
 from progress.serializers import AssignmentSerializer
 
+
 class UserViewSet(ModelViewSet):
     http_method_names = ["get", "patch", "delete", "post"]
     queryset = CustomUser.objects.all()
@@ -74,18 +75,23 @@ class TutorViewSet(ModelViewSet):
         serializer = ApplicationSerializer(applicants, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=["get"], url_path="students-progress",permission_classes=[IsAuthenticated])
-    def students_progress(self, request, pk=None,student_id=None):
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="students-progress",
+        permission_classes=[IsAuthenticated],
+    )
+    def students_progress(self, request, pk=None, student_id=None):
         if not request.user.is_tutor:
             raise PermissionDenied("Only tutor can access this endpoint")
-        
-        assignments = Assignment.objects.filter(tuition__tutor = request.user)
+
+        assignments = Assignment.objects.filter(tuition__tutor=request.user)
         student_id = request.query_params.get("student_id")
         if student_id:
-            assignments = assignments.filter(student_id =  student_id)
+            assignments = assignments.filter(student_id=student_id)
 
-        return Response(AssignmentSerializer(assignments,many=True).data)
-    
+        return Response(AssignmentSerializer(assignments, many=True).data)
+
 
 class StudentViewSet(ModelViewSet):
     http_method_names = ["get", "patch", "delete"]
@@ -143,20 +149,25 @@ class StudentViewSet(ModelViewSet):
         applications = Application.objects.filter(user=request.user, is_selected=True)
         serializer = ApplicationSerializer(applications, many=True)
         return Response(serializer.data)
-    
-    @action(detail=False, methods=["get"], url_path="progress",permission_classes=[IsAuthenticated])
-    def my_progress(self,request):
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="progress",
+        permission_classes=[IsAuthenticated],
+    )
+    def my_progress(self, request):
         if not request.user.is_student:
             raise PermissionDenied("Only students can view")
-        
-        assignments = Assignment.objects.filter(student = request.user.student)
+
+        assignments = Assignment.objects.filter(student=request.user.student)
 
         tuition_id = request.query_params.get("tuition_id")
         if tuition_id:
-            assignments = assignments.filter(tuition_id =  tuition_id)
+            assignments = assignments.filter(tuition_id=tuition_id)
 
         tutor_id = request.query_params.get("tutor_id")
         if tutor_id:
-            assignments = assignments.filter(tuition__tutor_id = tutor_id)
+            assignments = assignments.filter(tuition__tutor_id=tutor_id)
 
-        return Response(AssignmentSerializer(assignments,many=True).data)
+        return Response(AssignmentSerializer(assignments, many=True).data)
