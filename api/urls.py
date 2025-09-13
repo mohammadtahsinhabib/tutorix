@@ -16,16 +16,8 @@ router.register("tuitions", TuitionViewSet, basename="tuitions")
 
 tuition_router = routers.NestedDefaultRouter(router, "tuitions", lookup="tuition")
 tuition_router.register("reviews", ReviewViewSet, basename="tuition-reviews")
-tuition_router.register("progress", ProgressViewSet, basename="tuition-progress")
+# tuition_router.register("progress", ProgressViewSet, basename="tuition-progress")
 tuition_router.register("assignments", AssignmentViewSet, basename="tuition-status")
-
-# student_router = routers.NestedDefaultRouter(router, "students", lookup="student-progress")
-# student_router.register("progress", ProgressViewSet , basename="student-progress")
-
-# tutor_router = routers.NestedDefaultRouter(router, "tutors", lookup="tutor-progress")
-# tutor_router.register("progress", ProgressViewSet , basename="tutor-progress")
-
-# router.register(r'payments', PaymentViewSet, basename='payments')
 
 urlpatterns = [
     path("", include(router.urls)),

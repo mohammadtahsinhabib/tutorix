@@ -3,7 +3,6 @@ from rest_framework import serializers
 from users.serializers import UserSerializer
 from tuition.serializers import TuitionSerializer
 
-
 class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application

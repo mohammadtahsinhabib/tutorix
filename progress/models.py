@@ -24,7 +24,6 @@ class Progress(models.Model):
     tuition = models.ForeignKey(
         Tuition, on_delete=models.CASCADE, related_name="student_progress"
     )
-    # completed_topic = models.ManyToManyField(Topic, blank=True)
     assignments_completed = models.ManyToManyField(Assignment, blank=True)
 
     class Meta:
