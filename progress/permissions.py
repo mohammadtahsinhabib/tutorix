@@ -5,4 +5,11 @@ class IsTutor(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         
-        return request.user.is_authenticated and request.user.is_tutor
+        return request.user.is_authenticated and request.user.is_tutor 
+    
+    def has_object_permission(self, request, view, obj):
+
+        if request.method in SAFE_METHODS:
+            return True
+
+        return obj.tuition.tutor == request.user
