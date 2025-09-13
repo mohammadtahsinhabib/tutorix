@@ -6,8 +6,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-g-g1x^ic(v9m+y*tf@^j$3eu!^@l=bz(tll0&4q$7j=e9@zciq"
 
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 AUTH_USER_MODEL = "users.CustomUser"
@@ -65,15 +65,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "tutorix.wsgi.app"
 
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -122,9 +113,6 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    # "DEFAULT_PERMISSION_CLASSES": (
-    #     "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
-    # ),
 }
 
 
@@ -146,14 +134,21 @@ SWAGGER_SETTINGS = {
 
 # DATABASES = {
 #     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": config("dbname"),
-#         "USER": config("user"),
-#         "PASSWORD": config("password"),
-#         "HOST": config("host"),
-#         "PORT": config("port"),
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
 #     }
 # }
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("dbname"),
+        "USER": config("user"),
+        "PASSWORD": config("password"),
+        "HOST": config("host"),
+        "PORT": config("port"),
+    }
+}
 
 cloudinary.config(
     cloud_name="dsyexjkec",
@@ -167,8 +162,8 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = config("EMAIL_HOST")
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
 EMAIL_PORT = config("EMAIL_PORT")
