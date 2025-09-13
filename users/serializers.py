@@ -1,4 +1,4 @@
-from .models import *
+from users.models import *
 from rest_framework import serializers
 from djoser.serializers import (
     UserCreateSerializer as BaseUserCreateSerializer,
@@ -41,7 +41,6 @@ class TutorSerializer(serializers.ModelSerializer):
         ]
 
     user = UserSerializer(read_only=True)
-
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:

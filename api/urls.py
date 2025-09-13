@@ -3,7 +3,7 @@ from tuition.views import *
 from users.views import UserViewSet, TutorViewSet, StudentViewSet
 from rest_framework_nested import routers
 from tuition.views import TuitionViewSet
-from progress.views import ProgressViewSet, AssignmentViewSet
+from progress.views import AssignmentViewSet
 from reviews.views import ReviewViewSet
 
 

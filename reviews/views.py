@@ -1,7 +1,6 @@
 from reviews.serializers import ReviewSerializer
 from reviews.models import Review
 from rest_framework.exceptions import PermissionDenied
-from rest_framework import status
 from applications.models import Application
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated

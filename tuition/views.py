@@ -1,5 +1,5 @@
-from applications.serializers import ApplicationSerializer
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,7 +9,7 @@ from rest_framework import status
 from tuition.serializers import TuitionSerializer
 from tuition.models import Tuition
 from applications.models import Application
-from django_filters.rest_framework import DjangoFilterBackend
+from applications.serializers import ApplicationSerializer
 
 
 class TuitionViewSet(ModelViewSet):
