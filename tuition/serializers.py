@@ -7,5 +7,6 @@ class TuitionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tuition
         fields = "__all__"
+        read_only_fields = ["tutor"]
 
     tutor = UserSerializer(read_only=True)

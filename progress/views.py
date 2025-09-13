@@ -5,12 +5,12 @@ from rest_framework.permissions import IsAuthenticated
 from progress.models import Assignment
 from progress.serializers import AssignmentSerializer
 from rest_framework.exceptions import PermissionDenied
-
+from progress.permissions import IsTutor
 
 class AssignmentViewSet(ModelViewSet):
     queryset = Assignment.objects.all()
     serializer_class = AssignmentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsTutor]
 
     @action(detail=True, methods=["post"], url_path="mark-completed")
     def mark_completed(self, request, pk=None, tuition_pk=None):
